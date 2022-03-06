@@ -1,0 +1,82 @@
+// :root{
+//     --primary-color:#272727;
+//     --accent-color: #ff652f;
+//     --text-color: #fff;
+// }
+
+//importing _reset.scss
+@import  './resets';
+@import './variables';
+
+//function in scss
+@function weight($weight-name)
+{
+    @return map-get($font-weights,$weight-name);
+}
+
+//function should return something
+//mixin should be used to use the style element again and again
+
+@mixin flexCenter($direction){
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction:$direction;
+}
+
+//dark theme and light theme
+@mixin theme($light-theme:true)
+{
+    @if $light-theme{
+        background: lighten($primary-color,100%);
+        color:darken($text-color,100%);
+    }
+}
+
+@mixin mobile {
+    @media (max-width: $mobile) {
+        @content;
+    }
+}
+
+body {
+    // background:var(--primary-color);
+    background:$primary-color;
+    color:$text-color;
+}
+
+.main {
+    @include flexCenter(row);
+    width:80% - 40%;
+    margin: 0 auto;
+    
+    // .main_paragraph{ => &
+    //interpolation-> we just don't want .main-paragraph we want all the thing 
+    //before it {&}
+
+    #{&}_paragraph1 {
+        // font-weight:map-get($font-weights, bold);
+        font-weight: weight(regular);
+
+        &:hover{
+            color:pink;
+        }
+    }
+    #{&}_paragraph2{
+        //we extended the same property of the paragraph1
+        @extend .main_paragraph1;
+
+        &:hover{
+            color:$accent-color;
+        }
+    }
+
+    //after the screen size reduce to 800px the flex-direction change to column
+    @include mobile{
+        flex-direction: column;
+    }
+}
+
+.light{
+    @include theme($light-theme:false);
+}
